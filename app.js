@@ -5,7 +5,7 @@ const express = require("express");
 const hbs = require("hbs");
 const app = express();
 
-require("./config")(app);
+require("./config")(app)
 require("./routes/index")(app)
 
 const projectName = "metalify";
