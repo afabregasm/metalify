@@ -8,7 +8,7 @@ const userSchema = new Schema({
     type: Schema.Types.ObjectId,
 		ref: "Playlist"
   }]
-  //referencias de la bd characrters
+  //referencias de la bd playlist
 });
 
 const User = model("User", userSchema);
