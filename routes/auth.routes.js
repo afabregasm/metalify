@@ -4,16 +4,16 @@ const saltRounds = 10;
 const mongoose = require("mongoose");
 const User = require("../models/User.model");
 const regex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/;
-const isLoggedOut = require("../middleware/isLoggedOut");
 const isLoggedIn = require("../middleware/isLoggedIn");
+const isLoggedOut = require("../middleware/isLoggedOut");
 
 // LOGIN ROUTES
 
-router.get("/", (req, res, next) => {
+router.get("/", isLoggedOut, (req, res, next) => {
   res.render("auth/login.hbs");
 });
 
-router.post("/login", (req, res, next) => {
+router.post("/login", isLoggedOut, (req, res, next) => {
   const { username, password } = req.body;
 
   if (!username) {
@@ -64,7 +64,7 @@ router.post("/login", (req, res, next) => {
 
 // LOGOUT ROUTE
 
-router.get("/logout", (req, res) => {
+router.get("/logout", isLoggedIn, (req, res) => {
   req.session.destroy((err) => {
     if (err) {
       return res.status(500).render("logout-error.hbs");
@@ -75,11 +75,11 @@ router.get("/logout", (req, res) => {
 
 // SIGNUP ROUTES
 
-router.get("/signup", (req, res) => {
+router.get("/signup", isLoggedOut, (req, res) => {
   res.render("auth/signup.hbs");
 });
 
-router.post("/signup", (req, res) => {
+router.post("/signup", isLoggedOut, (req, res) => {
   const { username, password } = req.body;
 
   if (!username) {
