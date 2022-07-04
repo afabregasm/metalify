@@ -3,18 +3,30 @@ const mongoose = require("mongoose");
 const User = require("../../models/User.model");
 const isLoggedOut = require("../../middleware/isLoggedOut");
 const isLoggedIn = require("../../middleware/isLoggedIn");
-const spotifyApi = require("../../app");
+const SpotifyWebApi = require('spotify-web-api-node');
 
-router.get("/", (req, res, next) => {
-  res.render("search-form.hbs");
+// setting the spotify-api goes here:
+const spotifyApi = new SpotifyWebApi({
+    clientId: process.env.CLIENT_ID,
+    clientSecret: process.env.CLIENT_SECRET
 });
 
-router.get("/artist-search", (req, res, next) => {
+// Retrieve an access token
+spotifyApi
+    .clientCredentialsGrant()
+    .then(data => spotifyApi.setAccessToken(data.body['access_token']))
+    .catch(error => console.log('Something went wrong when retrieving an access token', error));
+
+router.get("/", (req, res, next) => {
+  res.render("search/form.hbs");
+});
+
+router.get("/artist", (req, res, next) => {
   const { artist } = req.query;
   spotifyApi
     .searchArtists(artist)
     .then((data) => {
-      res.render("artist-search-results.hbs", {
+      res.render("search/artists.hbs", {
         artist: data.body.artists.items,
       });
     })
@@ -23,7 +35,7 @@ router.get("/artist-search", (req, res, next) => {
     );
 });
 
-router.get("/albums/:artistId", (req, res, next) => {
+router.get("albums/:artistId", (req, res, next) => {
   const { artistId } = req.params;
   spotifyApi
     .getArtistAlbums(artistId)
@@ -35,13 +47,12 @@ router.get("/albums/:artistId", (req, res, next) => {
     );
 });
 
-router.get("/tracks/:albumId", (req, res, next) => {
+router.get("tracks/:albumId", (req, res, next) => {
   const { albumId } = req.params;
-  console.log(albumId);
   spotifyApi
     .getAlbumTracks(albumId)
     .then((data) => {
-      res.render("view-tracks.hbs", { track: data.body.items });
+      res.render("search/tracks.hbs", { track: data.body.items });
     })
     .catch((err) =>
       console.log("The error while searching albums occurred: ", err)
