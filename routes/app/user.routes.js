@@ -6,7 +6,7 @@ const User = require("../../models/User.model");
 router.get("/profile", isLoggedIn, (req, res, next) =>{
 
   User.findById(req.user._id)
-  .populate('favorites')
+  //.populate('favorites')
   .then((user) => {
     res.render("profile", {user: user});
   })
