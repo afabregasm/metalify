@@ -1,4 +1,4 @@
 node_modules
 npm-debug.log
 .env
-.gitignore
+.DS_Store

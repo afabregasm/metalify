@@ -1,12 +1,7 @@
 const router = require("express").Router();
-const isLoggedIn = require("../middleware/isLoggedIn");
-const User = require("../models/User.model");
-
-
-/* GET home page */
-router.get("/", (req, res, next) => {
-  res.render("index");
-});
+const isLoggedIn = require("../../middleware/isLoggedIn");
+const isLoggedOut = require("../../middleware/isLoggedOut");
+const User = require("../../models/User.model");
 
 router.get("/profile", isLoggedIn, (req, res, next) =>{
 
