@@ -1,8 +1,15 @@
 <div id="form">
-  <form action="/search/{{this.value}}" method="POST">
+  <form action="/search/results" method="POST">
     <label>
-      <input type="text" name="artist" placeholder="Search here..." />
+      <input type="text" name="value" placeholder="Your search here!" />
     </label>
+    <select id="type" name="type">
+      <option value="song">Song</option>
+      <option value="artist">Artist</option>
+    </select>
     <button type="submit">Search</button>
+    {{#if errorMessage}}
+      <p class="error">{{errorMessage}}</p>
+    {{/if}}
   </form>
 </div>

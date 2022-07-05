@@ -1,13 +1,16 @@
-   {{#each track}}
-<figure>
-    <figcaption>Listen to {{name}}:</figcaption>
-
-    <audio
+<div>
+    {{#each track}}
+    <img src="{{album.images.0.url}}" />
+    <h5>{{name}}</h5>
+    <p>{{artists.0.name}}</p>
+    <p>{{album.name}}</p>
+    <figure>
+        <audio
         controls
         src="{{preview_url}}">
             Your browser does not support the
             <code>audio</code> element.
-    </audio>
-</figure>
-
-{{/each}}
+        </audio>
+    </figure>
+    {{/each}}
+</div>
