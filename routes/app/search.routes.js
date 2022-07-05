@@ -30,48 +30,53 @@ router.post("/results", (req, res, next) => {
       .searchTracks(value)
       .then((track) => {
         res.render("search/tracks.hbs", { track: track.body.tracks.items });
-        console.log(
-          "AQUÍ EMPIEZAAAAAAA 👍👍👍👍👍👍👍",
-          track.body.tracks.items[0].artists[0].name
-        );
       })
-      .catch((error) => {
-        res.render("search/form.hbs", { errorMessage: error.message });
+      .catch(() => {
+        res.render("search/form.hbs", {
+          errorMessage:
+            "There was an error searching for the song, make sure you provided a valid input.",
+        });
+      });
+  } else if (type === "artist") {
+    spotifyApi
+      .searchArtists(value)
+      .then((artist) => {
+        res.render("search/artists.hbs", { artist: artist.body.artists.items });
+      })
+      .catch(() => {
+        res.render("search/form.hbs", {
+          errorMessage:
+            "There was an error searching for the artist, make sure you provided a valid input.",
+        });
       });
   }
-  //     .searchArtists(artist)
-  //     .then((data) => {
-  //       res.render("search/artists.hbs", {
-  //         artist: data.body.artists.items,
-  //       });
-  //     })
-  //     .catch((err) =>
-  //       console.log("The error while searching artists occurred: ", err)
-  //     );
 });
 
-// router.get("albums/:artistId", (req, res, next) => {
-//   const { artistId } = req.params;
-//   spotifyApi
-//     .getArtistAlbums(artistId)
-//     .then((data) => {
-//       res.render("albums.hbs", { album: data.body.items });
-//     })
-//     .catch((err) =>
-//       console.log(artistId, "The error while searching albums occurred: ", err)
-//     );
-// });
-
-// router.get("tracks/:albumId", (req, res, next) => {
-//   const { albumId } = req.params;
-//   spotifyApi
-//     .getAlbumTracks(albumId)
-//     .then((data) => {
-//       res.render("search/tracks.hbs", { track: data.body.items });
-//     })
-//     .catch((err) =>
-//       console.log("The error while searching albums occurred: ", err)
-//     );
-// });
+router.get("/artist/:id", async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    //iniciamos array
+    let finArray = [];
+    //Llamamos api
+    const albums = await spotifyApi.getArtistAlbums(id);
+    //Cogemos los items de los albumes
+    const albumsArray = albums.body.items;
+    //Iteramos sobre los albumes para meter dentro las canciones
+    for (const album of albumsArray) {
+      const idAlbum = album.id;
+      //obtenemos canciones del album actual
+      const songs = await spotifyApi.getAlbumTracks(idAlbum);
+      //cogemos los items de las canciones
+      const cleanedSongs = songs.body.items;
+      //pusheamos el nuevo objeto con las canciones dentro al array
+      finArray.push({ ...album, cleanedSongs });
+    }
+    console.log(finArray[0].cleanedSongs[0]);
+    // const info = [cleanedAlbum, cleanedSongs];
+    res.render("search/single-artist.hbs", { albumes: finArray });
+  } catch (error) {
+    console.log(error);
+  }
+});
 
 module.exports = router;
