@@ -1,14 +1,9 @@
 const router = require("express").Router();
-
-const alert = require("alert");
-const isLoggedIn = require("../../middleware/isLoggedIn");
 const Playlist = require("../../models/Playlist.model");
 const User = require("../../models/User.model");
-const SpotifyWebApi = require('../../app');
-const track = require('../../models/track.model')
 
 router.get('/new-playlist',(req, res, next) => {
-  res.render('user/new-playlist.hbs')
+  res.render('user/new-playlist.hbs', {user: {playlistname: ''}})
 })
 
 
@@ -18,8 +13,8 @@ router.post('/new-playlist', (req, res, next) => {
   Playlist.create({
      playlistname: newplaylist
       })
-      .then((result) => {
-        res.render('user/my-playlist.hbs', {result})
+      .then((user) => {
+        res.render('user/my-playlist.hbs', {user: {playlistname: newplaylist}})
       })
       .catch((err) => {
         next(err);
@@ -30,5 +25,14 @@ router.post('/new-playlist', (req, res, next) => {
     router.get('/my-playlist',(req, res, next) => {
       res.render('user/my-playlist.hbs')
     });
+
+  /*  Playlist.create()
+.then((newplaylist) => {
+  User.findByIdAndUpdate({$push: {newplaylist},
+  }) .then(() => {
+    res.redirect("/profile")
+  })
+}); */
+
 
 module.exports = router;
