@@ -106,3 +106,32 @@ ul li {
 #logout-form button {
   width: 120px;
 }
+
+footer {
+  position: relative;
+  bottom: 0;
+  width: 100%;
+  height: auto;
+  text-align: center;
+}
+
+#squarediv {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+#artists {
+  margin: 20px;
+}
+
+#artistname {
+  text-align: center;
+  font-size: 20px;
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.container-fluid {
+  background-color: white
+
+}
+
