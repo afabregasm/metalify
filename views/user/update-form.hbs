@@ -1,5 +1,8 @@
-<h1>{{playlist.playlistname}}</h1>
-<p>blabla</p>
-<form action="/playlist/{{playlist._id}}/update" method="post">
+<form action="/playlist/{{playlist._id}}/update-data" method="post">
+
+<label for="name">Name:</label>
+    <input id="name" name="name" type="text" value=""></input>
+
 <button type="submit">Update Playlist</button>
 </form>
+

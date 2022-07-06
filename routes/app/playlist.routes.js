@@ -48,6 +48,7 @@ router.get("/costume-playlist/:id", (req, res, next) => {
   const { id } = req.params;
   Playlist.findById(id)
   .then((playlist) => {
+    console.log(playlist)
     res.render("user/costume-playlist", { playlist });
   })
   .catch((err) => {
@@ -56,10 +57,8 @@ router.get("/costume-playlist/:id", (req, res, next) => {
 });
 
 router.post("/:id/delete", (req, res, next) => {
-  console.log(req.params.id)
   Playlist.findByIdAndRemove(req.params.id)
-  .then((response) => {
-    console.log(response)
+  .then(() => {
     res.redirect('/')
   })
   .catch((err) => {
@@ -67,44 +66,25 @@ router.post("/:id/delete", (req, res, next) => {
   });
 });
 
-router.post("/:id/update", (req, res, next) => {
-  console.log(req.params.id)
-  const {playlistname} = req.params
-  Playlist.findByIdAndUpdate(req.params.id, {playlistname})
-  .then((response) => {
-    console.log(response)
-    res.redirect('user/update-form')
-  })
-  .catch((err) => {
-    next(err);
+router.get("/:id/update", (req, res, next) => {
+  const {id} = req.params
+  Playlist.findById(id)
+    .then((playlist) => {
+      res.render('user/update-form', {playlist})
+    })
   });
-});
 
-/*router.post('/new-playlist', (req, res, next) => {
-  const {newplaylist} = req.body 
-   console.log(newplaylist)
-  Playlist.create({
-     playlistname: newplaylist
-      })
-      .then((user) => {
-        res.render('user/my-playlist.hbs', {user: {playlistname: newplaylist}})
-      })
-      .catch((err) => {
-        next(err);
-      });
-      
+router.post("/:id/update-data", (req, res, next) => {
+  const {id} = req.params
+  console.log(req.body.name)
+    Playlist.findByIdAndUpdate(id, {playlistname: req.body.name}, {new: true})
+    .then((response) => {
+      console.log(response)
+      res.redirect(`/playlist/${id}/update`)
+    })
+    .catch((err) => {
+      next(err);
     });
-
-    router.get('/my-playlist',(req, res, next) => {
-      res.render('user/my-playlist.hbs')
-    }); */
-
-/*  Playlist.create()
-.then((newplaylist) => {
-  User.findByIdAndUpdate({$push: {newplaylist},
-  }) .then(() => {
-    res.redirect("/profile")
-  })
-}); */
+  });
 
 module.exports = router;
