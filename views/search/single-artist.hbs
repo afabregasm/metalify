@@ -1,8 +1,8 @@
-<h4>{{albumes.0.artists.0.name}}</h4>
+<h4>{{albums.0.artists.0.name}}</h4>
 
-{{#each albumes}}
+{{#each albums}}
     <img src="{{this.images.0.url}}" />
-    <p>{{this.name}}</p>
+    <p><a href="/album/{{id}}">{{this.name}}</a></p>
     {{#each this.cleanedSongs}}
     <p>{{this.track_number}} - {{this.name}}</p>
     <figure>
