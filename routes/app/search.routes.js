@@ -1,7 +1,6 @@
 const router = require("express").Router();
 const mongoose = require("mongoose");
 const User = require("../../models/User.model");
-const isLoggedOut = require("../../middleware/isLoggedOut");
 const isLoggedIn = require("../../middleware/isLoggedIn");
 const SpotifyWebApi = require("spotify-web-api-node");
 
@@ -23,59 +22,54 @@ router.get("/", (req, res, next) => {
   res.render("search/form.hbs");
 });
 
-router.post("/results", (req, res, next) => {
+router.post("/results", async (req, res, next) => {
   const { value, type } = req.body;
   if (type === "song") {
-    spotifyApi
-      .searchTracks(value)
-      .then((track) => {
+    try {
+      const track = await spotifyApi.searchTracks(value);
+      const idArtist = track.body.tracks.items[0].album.artists[0].id;
+      const getGenre = await spotifyApi.getArtist(idArtist);
+      const genre = getGenre.body.genres;
+      let stringGenre = genre.join(" ");
+      if (stringGenre.includes("metal")) {
         res.render("search/tracks.hbs", { track: track.body.tracks.items });
-      })
-      .catch(() => {
+      } else {
         res.render("search/form.hbs", {
           errorMessage:
-            "There was an error searching for the song, make sure you provided a valid input.",
+            "Error 404: Musical taste not found. Try with a true song.",
         });
-      });
+      }
+      console.log(
+        "🚀 ~ file: search.routes.js ~ line 32 ~ router.post ~ genre",
+        genre
+      );
+    } catch (error) {
+      console.log(error);
+    }
   } else if (type === "artist") {
     spotifyApi
       .searchArtists(value)
       .then((artist) => {
-        res.render("search/artists.hbs", { artist: artist.body.artists.items });
+        const genre = artist.body.artists.items[0].genres;
+        let stringGenre = genre.join(" ");
+        if (stringGenre.includes("metal")) {
+          res.render("search/artists.hbs", {
+            artist: artist.body.artists.items,
+          });
+        } else {
+          res.render("search/form.hbs", {
+            errorMessage:
+              "Error 404: Musical taste not found. Try with a true musician.",
+          });
+        }
       })
-      .catch(() => {
+      .catch((error) => {
+        console.log(error);
         res.render("search/form.hbs", {
           errorMessage:
             "There was an error searching for the artist, make sure you provided a valid input.",
         });
       });
-  }
-});
-
-router.get("/artist/:id", async (req, res, next) => {
-  const { id } = req.params;
-  try {
-    //iniciamos array
-    let finArray = [];
-    //Llamamos api
-    const albums = await spotifyApi.getArtistAlbums(id);
-    //Cogemos los items de los albumes
-    const albumsArray = albums.body.items;
-    //Iteramos sobre los albumes para meter dentro las canciones
-    for (const album of albumsArray) {
-      const idAlbum = album.id;
-      //obtenemos canciones del album actual
-      const songs = await spotifyApi.getAlbumTracks(idAlbum);
-      //cogemos los items de las canciones
-      const cleanedSongs = songs.body.items;
-      //pusheamos el nuevo objeto con las canciones dentro al array
-      finArray.push({ ...album, cleanedSongs });
-    }
-    console.log(finArray[0].cleanedSongs[0]);
-    // const info = [cleanedAlbum, cleanedSongs];
-    res.render("search/single-artist.hbs", { albumes: finArray });
-  } catch (error) {
-    console.log(error);
   }
 });
 
