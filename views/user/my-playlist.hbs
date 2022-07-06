@@ -1,5 +1,7 @@
-<h1>This is my playlist</h1>
+{{#each response}}
 
-<h1>
-    <a href="playlist/{{user.playlistname}}">{{user.playlistname}}</a>
-</h1>
+<a href="/playlist/costume-playlist/{{_id}}">{{playlistname}} <br></a>
+
+
+{{/each}}
+
