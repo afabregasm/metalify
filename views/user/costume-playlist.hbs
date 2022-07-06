@@ -1,7 +1,7 @@
 <h1>{{playlist.playlistname}}</h1>
 
-<form action="/playlist/{{playlist._id}}/update" method="post">
-<button type="submit">Update Playlist</button>
+<form action="/playlist/{{playlist._id}}/update" method="get">
+    <button type="submit">Update Playlist</button>
 </form>
 
 <form action="/playlist/{{playlist._id}}/delete" method="post">
