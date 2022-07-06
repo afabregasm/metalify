@@ -1,5 +1,5 @@
 body {
-  padding: 50px;
+  /* padding: 50px; */
   font: 14px 'Lucida Grande', Helvetica, Arial, sans-serif;
 }
  
@@ -7,6 +7,10 @@ a {
   color: #00b7ff;
   text-decoration: none;
   font-size: 1.5em;
+}
+
+div {
+  margin-top: 30px;
 }
  
 form {
@@ -21,6 +25,10 @@ form label {
   text-align: center;
   width: 100%;
 }
+
+form select {
+  width: 90px;
+}
  
 form input,
 form button {
@@ -29,7 +37,7 @@ form button {
   outline: 0;
   padding: 4px;
   width: 100%;
-  margin-bottom: 20px;
+  /* margin-bottom: 20px; */
 }
 
 form button {
