@@ -1,7 +1,7 @@
 document.addEventListener(
   "DOMContentLoaded",
   () => {
-    console.log("Proyecto-modelo JS imported successfully!");
+    console.log("Metalify JS imported successfully!");
   },
   false
 );

@@ -1,28 +1,26 @@
 <h4>{{albums.0.artists.0.name}}</h4>
 
 {{#each albums}}
-    <img src="{{this.images.0.url}}" />
-    <p><a href="/album/{{id}}">{{this.name}}</a></p>
-    {{#each this.cleanedSongs}}
-    <p>{{this.track_number}} - {{this.name}}</p>
-    <figure>
-        <audio
-        controls
-        src="{{this.preview_url}}">
-            Your browser does not support the
-            <code>audio</code> element.
-        </audio>
-    </figure>
-    <form action="addsong" method="post">
-<label for="playlist">Add this song to a playlist:</label>
-  <select name="playlistoptions">
+  <img src="{{this.images.0.url}}" />
+  <p><a href="/album/{{id}}">{{this.name}}</a></p>
+  {{#each this.cleanedSongs}}
+  <p>{{this.track_number}} - {{this.name}}</p>
+  <figure>
+      <audio
+      controls
+      src="{{this.preview_url}}">
+          Your browser does not support the
+          <code>audio</code> element.
+      </audio>
+  </figure>
+  <form action="addsong" method="post">
+    <label for="playlist">Add this song to a playlist:</label>
+    <select name="playlistoptions">
     {{#each playlist}}
-      <option
-        value="{{playlist.playlistname}}"
-      >{{playlist.playlistname}}</option>
+      <option value="{{playlist.playlistname}}">{{playlist.playlistname}}</option>
     {{/each}}
-  </select>
-  <button type="submit">Add song</button>
+    </select>
+    <button type="submit">Add song</button>
   </form>
-    {{/each}}
+  {{/each}}
 {{/each}}
