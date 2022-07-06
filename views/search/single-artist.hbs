@@ -13,5 +13,16 @@
             <code>audio</code> element.
         </audio>
     </figure>
+    <form action="addsong" method="post">
+<label for="playlist">Add this song to a playlist:</label>
+  <select name="playlistoptions">
+    {{#each playlist}}
+      <option
+        value="{{playlist.playlistname}}"
+      >{{playlist.playlistname}}</option>
+    {{/each}}
+  </select>
+  <button type="submit">Add song</button>
+  </form>
     {{/each}}
 {{/each}}

@@ -4,10 +4,13 @@ const { Schema, model } = require("mongoose");
 const trackSchema = new Schema(
   {
     name: String,
-  },
-  {
-    timestamps: true,
-  }
-);
+    track: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Playlist",
+      },
+    ],
+ 
+  });
 
 module.exports = model("Track", trackSchema);
