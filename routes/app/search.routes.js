@@ -18,11 +18,11 @@ spotifyApi
 
 // ROUTES
 
-router.get("/", (req, res, next) => {
+router.get("/", isLoggedIn, (req, res, next) => {
   res.render("search/form.hbs");
 });
 
-router.post("/results", async (req, res, next) => {
+router.post("/results", isLoggedIn, async (req, res, next) => {
   const { value, type } = req.body;
   if (type === "song") {
     try {
@@ -32,19 +32,20 @@ router.post("/results", async (req, res, next) => {
       const genre = getGenre.body.genres;
       let stringGenre = genre.join(" ");
       if (stringGenre.includes("metal")) {
-        res.render("search/tracks.hbs", { track: track.body.tracks.items });
+        res.render("search/tracks.hbs", {
+          track: track.body.tracks.items,
+        });
       } else {
         res.render("search/form.hbs", {
           errorMessage:
-            "Error 404: Musical taste not found. Try with a true song.",
+            "Error 404: Musical taste not found. Try with a true song 🤘🏻",
         });
       }
-      console.log(
-        "🚀 ~ file: search.routes.js ~ line 32 ~ router.post ~ genre",
-        genre
-      );
-    } catch (error) {
-      console.log(error);
+    } catch {
+      res.render("search/form.hbs", {
+        errorMessage:
+          "There was an error searching for the song, make sure you provided a valid input.",
+      });
     }
   } else if (type === "artist") {
     spotifyApi
@@ -59,12 +60,11 @@ router.post("/results", async (req, res, next) => {
         } else {
           res.render("search/form.hbs", {
             errorMessage:
-              "Error 404: Musical taste not found. Try with a true musician.",
+              "Error 404: Musical taste not found. Try with a true musician 🤘🏻",
           });
         }
       })
-      .catch((error) => {
-        console.log(error);
+      .catch(() => {
         res.render("search/form.hbs", {
           errorMessage:
             "There was an error searching for the artist, make sure you provided a valid input.",
