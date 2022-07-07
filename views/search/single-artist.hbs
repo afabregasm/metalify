@@ -8,6 +8,7 @@
   <p class="albumtitletext"><a href="/album/{{id}}">{{this.name}}</a></p>
   </div>
   {{#each this.cleanedSongs}}
+  <div class="audioandform">
   <div class="audioandtext">
   <p>{{this.track_number}} - {{this.name}}</p>
   
@@ -31,6 +32,7 @@
     <input type="hidden" value="{{this.id}}" name="trackId" />
     <button type="submit">Add song</button>
   </form>
+  </div>
   </div>
   {{/each}}
   </div>
