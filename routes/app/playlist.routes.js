@@ -37,28 +37,11 @@ router.post("/new-playlist", isLoggedIn, (req, res, next) => {
     playlistname: newplaylist,
   })
     .then(() => {
-      res.render("user/profile.hbs", {
-        user: { playlistname: newplaylist },
-      });
+      res.redirect("../profile");
     })
     .catch((err) => {
       next(err);
     });
-});
-
-router.get("/my-playlist", isLoggedIn, (req, res, next) => {
-  const userId = req.user._id;
-  Playlist.find({ userId: userId })
-    .then((response) => {
-      res.render("user/my-playlist.hbs", { response });
-    })
-    .catch((err) => {
-      next(err);
-    });
-});
-
-router.get("/my-playlist", isLoggedIn, (req, res, next) => {
-  res.render("user/edit-playlist", { response });
 });
 
 router.get("/edit-playlist/:id", isLoggedIn, (req, res, next) => {
@@ -72,6 +55,10 @@ router.get("/edit-playlist/:id", isLoggedIn, (req, res, next) => {
             playlist: playlist,
             tracks: tracks.body.tracks,
           });
+        });
+      } else {
+        res.render("user/edit-playlist", {
+          playlist: playlist,
         });
       }
     })
@@ -114,6 +101,19 @@ router.post("/add-track", isLoggedIn, (req, res, next) => {
     $push: { tracks: { $each: [trackId] } },
   })
     .then(() => {})
+    .catch((err) => {
+      next(err);
+    });
+});
+
+router.post("/remove-track", isLoggedIn, (req, res, next) => {
+  const { playlistId, trackId } = req.body;
+  Playlist.findByIdAndUpdate(playlistId, {
+    $pull: { tracks: trackId },
+  })
+    .then(() => {
+      res.redirect(`edit-playlist/${playlistId}`);
+    })
     .catch((err) => {
       next(err);
     });

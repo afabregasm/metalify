@@ -26,6 +26,11 @@
             <code>audio</code> element.
         </audio>
     </figure>
+    <form action="/playlist/remove-track" method="POST">
+        <input type="hidden" value="{{this.id}}" name="trackId" />
+        <input type="hidden" value="{{../playlist.id}}" name="playlistId" />
+        <button type="submit" class="buttonaddsong">Remove track</button>
+    </form>
     </div>
 </div>
 {{/each}}
