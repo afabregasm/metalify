@@ -150,6 +150,7 @@ footer {
 
 
 .albumtitleimage {
+  border: 1px solid red;
   align-content: center;
   padding: 10px;
 }
@@ -164,9 +165,16 @@ footer {
 
 
 .audioandtext{
+  border: 1px solid red;
   justify-content: flex-start;
   align-items: center;
   
 }
 
+.artistform {
+  border: 1px solid green;
+}
 
+.audioandform {
+  flex-direction: row;
+}
