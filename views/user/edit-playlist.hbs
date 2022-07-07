@@ -1,0 +1,31 @@
+<h1>{{playlist.playlistname}}</h1>
+<form action="/playlist/{{playlist._id}}/update" method="get">
+    <button type="submit">Update Playlist</button>
+</form>
+
+<form action="/playlist/{{playlist._id}}/delete" method="post">
+<button type="submit">Delete Playlist</button>
+</form>
+
+<div>
+{{#each tracks}}
+<div>
+    <div>
+    <img src="{{this.album.images.0.url}}" alt="{{this.album.name}}" width="250px" height="250px" /><
+    </div>
+    <div>
+    {{this.name}}
+    <a href="/artist/{{this.artists.0.id}}">{{this.artists.0.name}}</a>
+    <a href="/album/{{this.album.id}}">{{this.album.name}}</a>
+    <figure>
+        <audio
+        controls
+        src="{{this.preview_url}}">
+            Your browser does not support the
+            <code>audio</code> element.
+        </audio>
+    </figure>
+    </div>
+</div>
+{{/each}}
+</div>

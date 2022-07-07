@@ -1,12 +1,25 @@
 const router = require("express").Router();
+const isLoggedIn = require("../../middleware/isLoggedIn");
 const Playlist = require("../../models/Playlist.model");
-const User = require("../../models/User.model");
+const SpotifyWebApi = require("spotify-web-api-node");
 
-router.get("/new-playlist", (req, res, next) => {
+const spotifyApi = new SpotifyWebApi({
+  clientId: process.env.CLIENT_ID,
+  clientSecret: process.env.CLIENT_SECRET,
+});
+
+spotifyApi
+  .clientCredentialsGrant()
+  .then((data) => spotifyApi.setAccessToken(data.body["access_token"]))
+  .catch((error) =>
+    console.log("Something went wrong when retrieving an access token", error)
+  );
+
+router.get("/new-playlist", isLoggedIn, (req, res, next) => {
   res.render("user/new-playlist.hbs", { user: { playlistname: "" } });
 });
 
-router.get("/new-playlist", (req, res, next) => {
+router.get("/new-playlist", isLoggedIn, (req, res, next) => {
   Playlist.create()
     .then(() => {
       res.render("user/my-playlist.hbs");
@@ -16,9 +29,11 @@ router.get("/new-playlist", (req, res, next) => {
     });
 });
 
-router.post("/new-playlist", (req, res, next) => {
+router.post("/new-playlist", isLoggedIn, (req, res, next) => {
   const { newplaylist } = req.body;
+  const userId = req.user._id;
   Playlist.create({
+    userId: userId,
     playlistname: newplaylist,
   })
     .then(() => {
@@ -31,8 +46,9 @@ router.post("/new-playlist", (req, res, next) => {
     });
 });
 
-router.get("/my-playlist", (req, res, next) => {
-  Playlist.find()
+router.get("/my-playlist", isLoggedIn, (req, res, next) => {
+  const userId = req.user._id;
+  Playlist.find({ userId: userId })
     .then((response) => {
       res.render("user/my-playlist.hbs", { response });
     })
@@ -41,22 +57,30 @@ router.get("/my-playlist", (req, res, next) => {
     });
 });
 
-router.get("/my-playlist", (req, res, next) => {
-  res.render("user/costume-playlist", { response });
+router.get("/my-playlist", isLoggedIn, (req, res, next) => {
+  res.render("user/edit-playlist", { response });
 });
 
-router.get("/costume-playlist/:id", (req, res, next) => {
+router.get("/edit-playlist/:id", isLoggedIn, (req, res, next) => {
   const { id } = req.params;
   Playlist.findById(id)
     .then((playlist) => {
-      res.render("user/costume-playlist", { playlist });
+      if (playlist.tracks && playlist.tracks.length > 0) {
+        spotifyApi.getTracks(playlist.tracks).then((tracks) => {
+          console.log(tracks.body.tracks[0]);
+          res.render("user/edit-playlist", {
+            playlist: playlist,
+            tracks: tracks.body.tracks,
+          });
+        });
+      }
     })
     .catch((err) => {
       next(err);
     });
 });
 
-router.post("/:id/delete", (req, res, next) => {
+router.post("/:id/delete", isLoggedIn, (req, res, next) => {
   Playlist.findByIdAndRemove(req.params.id)
     .then(() => {
       res.redirect("/");
@@ -66,14 +90,14 @@ router.post("/:id/delete", (req, res, next) => {
     });
 });
 
-router.get("/:id/update", (req, res, next) => {
+router.get("/:id/update", isLoggedIn, (req, res, next) => {
   const { id } = req.params;
   Playlist.findById(id).then((playlist) => {
     res.render("user/update-form", { playlist });
   });
 });
 
-router.post("/:id/update-data", (req, res, next) => {
+router.post("/:id/update-data", isLoggedIn, (req, res, next) => {
   const { id } = req.params;
   Playlist.findByIdAndUpdate(id, { playlistname: req.body.name }, { new: true })
     .then((response) => {
@@ -84,7 +108,7 @@ router.post("/:id/update-data", (req, res, next) => {
     });
 });
 
-router.post("/add-track", (req, res, next) => {
+router.post("/add-track", isLoggedIn, (req, res, next) => {
   const { playlistId, trackId } = req.body;
   Playlist.findByIdAndUpdate(playlistId, {
     $push: { tracks: { $each: [trackId] } },

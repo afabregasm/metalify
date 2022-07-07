@@ -1,7 +1,6 @@
 const router = require("express").Router();
-const mongoose = require("mongoose");
-const Playlist = require("../../models/Playlist.model");
 const isLoggedIn = require("../../middleware/isLoggedIn");
+const Playlist = require("../../models/Playlist.model");
 const SpotifyWebApi = require("spotify-web-api-node");
 
 const spotifyApi = new SpotifyWebApi({
@@ -16,13 +15,12 @@ spotifyApi
     console.log("Something went wrong when retrieving an access token", error)
   );
 
-// ROUTES
-
 router.get("/artist/:id", isLoggedIn, async (req, res, next) => {
   const { id } = req.params;
+  const userId = req.user._id;
   try {
     let finArray = [];
-    const savedPlaylists = await Playlist.find();
+    const savedPlaylists = await Playlist.find({ userId: userId });
     const albums = await spotifyApi.getArtistAlbums(id);
     const albumsArray = albums.body.items;
     for (const album of albumsArray) {
@@ -43,8 +41,10 @@ router.get("/artist/:id", isLoggedIn, async (req, res, next) => {
 
 router.get("/album/:id", isLoggedIn, async (req, res, next) => {
   const { id } = req.params;
+  const userId = req.user._id;
+
   try {
-    const savedPlaylists = await Playlist.find();
+    const savedPlaylists = await Playlist.find({ userId: userId });
     const album = await spotifyApi.getAlbum(id);
     const albumContent = album.body;
     albumContent.tracks.items = albumContent.tracks.items.map((item) => {
