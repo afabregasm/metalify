@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const mongoose = require("mongoose");
-const User = require("../../models/User.model");
+const Playlist = require("../../models/Playlist.model");
 const isLoggedIn = require("../../middleware/isLoggedIn");
 const SpotifyWebApi = require("spotify-web-api-node");
 
@@ -22,15 +22,23 @@ router.get("/artist/:id", isLoggedIn, async (req, res, next) => {
   const { id } = req.params;
   try {
     let finArray = [];
+    const savedPlaylists = await Playlist.find();
+
     const albums = await spotifyApi.getArtistAlbums(id);
     const albumsArray = albums.body.items;
     for (const album of albumsArray) {
       const idAlbum = album.id;
       const songs = await spotifyApi.getAlbumTracks(idAlbum);
-      const cleanedSongs = songs.body.items;
+      const cleanedSongs = songs.body.items.map((song) => {
+        return { ...song, savedPlaylists };
+      });
       finArray.push({ ...album, cleanedSongs });
     }
-    res.render("search/single-artist.hbs", { albums: finArray });
+
+    res.render("search/single-artist.hbs", {
+      albums: finArray,
+      playlists: savedPlaylists,
+    });
   } catch (error) {
     next(error);
   }
