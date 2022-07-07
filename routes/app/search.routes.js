@@ -1,8 +1,6 @@
 const router = require("express").Router();
-const mongoose = require("mongoose");
-const User = require("../../models/User.model");
-const Playlist = require("../../models/Playlist.model");
 const isLoggedIn = require("../../middleware/isLoggedIn");
+const Playlist = require("../../models/Playlist.model");
 const SpotifyWebApi = require("spotify-web-api-node");
 
 const spotifyApi = new SpotifyWebApi({
@@ -17,15 +15,14 @@ spotifyApi
     console.log("Something went wrong when retrieving an access token", error)
   );
 
-// ROUTES
-
 router.get("/", isLoggedIn, (req, res, next) => {
   res.render("search/form.hbs");
 });
 
 router.post("/results", isLoggedIn, async (req, res, next) => {
   const { value, type } = req.body;
-  const savedPlaylists = await Playlist.find();
+  const userId = req.user._id;
+  const savedPlaylists = await Playlist.find({ userId: userId });
 
   if (type === "song") {
     try {
