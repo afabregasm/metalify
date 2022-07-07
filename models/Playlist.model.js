@@ -1,14 +1,14 @@
 const { Schema, model } = require("mongoose");
 
-
 const playlistSchema = new Schema(
   {
-    playlistname: String
+    playlistname: String,
+    tracks: [String],
   },
   {
     timestamps: true,
   }
 );
 
-
-module.exports = model("Playlist", playlistSchema);
+const Playlist = model("Playlist", playlistSchema);
+module.exports = Playlist;
