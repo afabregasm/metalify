@@ -1,7 +1,6 @@
 const router = require("express").Router();
-const mongoose = require("mongoose");
-const User = require("../../models/User.model");
 const isLoggedIn = require("../../middleware/isLoggedIn");
+const Playlist = require("../../models/Playlist.model");
 const SpotifyWebApi = require("spotify-web-api-node");
 
 const spotifyApi = new SpotifyWebApi({
@@ -16,28 +15,29 @@ spotifyApi
     console.log("Something went wrong when retrieving an access token", error)
   );
 
-// ROUTES
-
 router.get("/", isLoggedIn, (req, res, next) => {
   res.render("search/form.hbs");
 });
 
 router.post("/results", isLoggedIn, async (req, res, next) => {
   const { value, type } = req.body;
+  const userId = req.user._id;
+  const savedPlaylists = await Playlist.find({ userId: userId });
+
   if (type === "song") {
     try {
       const track = await spotifyApi.searchTracks(value);
       const idArtist = track.body.tracks.items[0].album.artists[0].id;
       const getGenre = await spotifyApi.getArtist(idArtist);
       const genre = getGenre.body.genres;
-      let stringGenre = genre.join(" ");
+      const stringGenre = genre.join(" ");
+      const tracks = track.body.tracks.items.map((item) => {
+        return { ...item, savedPlaylists };
+      });
+
       if (stringGenre.includes("metal")) {
-        console.log(
-          "🚀 ~ file: search.routes.js ~ line 37 ~ router.post ~ track.body.tracks.items",
-          track.body.tracks.items[0].id
-        );
         res.render("search/tracks.hbs", {
-          track: track.body.tracks.items,
+          track: tracks,
         });
       } else {
         res.render("search/form.hbs", {
@@ -45,7 +45,7 @@ router.post("/results", isLoggedIn, async (req, res, next) => {
             "Error 404: Musical taste not found. Try with a true song 🤘🏻",
         });
       }
-    } catch {
+    } catch (e) {
       res.render("search/form.hbs", {
         errorMessage:
           "There was an error searching for the song, make sure you provided a valid input.",

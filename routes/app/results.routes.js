@@ -1,7 +1,6 @@
 const router = require("express").Router();
-const mongoose = require("mongoose");
-const Playlist = require("../../models/Playlist.model");
 const isLoggedIn = require("../../middleware/isLoggedIn");
+const Playlist = require("../../models/Playlist.model");
 const SpotifyWebApi = require("spotify-web-api-node");
 
 const spotifyApi = new SpotifyWebApi({
@@ -16,14 +15,12 @@ spotifyApi
     console.log("Something went wrong when retrieving an access token", error)
   );
 
-// ROUTES
-
 router.get("/artist/:id", isLoggedIn, async (req, res, next) => {
   const { id } = req.params;
+  const userId = req.user._id;
   try {
     let finArray = [];
-    const savedPlaylists = await Playlist.find();
-
+    const savedPlaylists = await Playlist.find({ userId: userId });
     const albums = await spotifyApi.getArtistAlbums(id);
     const albumsArray = albums.body.items;
     for (const album of albumsArray) {
@@ -34,26 +31,31 @@ router.get("/artist/:id", isLoggedIn, async (req, res, next) => {
       });
       finArray.push({ ...album, cleanedSongs });
     }
-
     res.render("search/single-artist.hbs", {
       albums: finArray,
-      playlists: savedPlaylists,
     });
   } catch (error) {
     next(error);
   }
 });
 
-router.get("/album/:id", isLoggedIn, (req, res, next) => {
+router.get("/album/:id", isLoggedIn, async (req, res, next) => {
   const { id } = req.params;
-  spotifyApi
-    .getAlbum(id)
-    .then((album) => {
-      res.render("search/single-album.hbs", { album: album.body });
-    })
-    .catch((error) => {
-      next(error);
+  const userId = req.user._id;
+
+  try {
+    const savedPlaylists = await Playlist.find({ userId: userId });
+    const album = await spotifyApi.getAlbum(id);
+    const albumContent = album.body;
+    albumContent.tracks.items = albumContent.tracks.items.map((item) => {
+      return { ...item, savedPlaylists };
     });
+    res.render("search/single-album.hbs", {
+      album: albumContent,
+    });
+  } catch (error) {
+    next(error);
+  }
 });
 
 module.exports = router;
