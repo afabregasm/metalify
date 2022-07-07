@@ -1,5 +1,5 @@
 <h4>{{albums.0.artists.0.name}}</h4>
-
+{{playlist.0.playlistname}}
 {{#each albums}}
   <img src="{{this.images.0.url}}" />
   <p><a href="/album/{{id}}">{{this.name}}</a></p>
@@ -13,13 +13,14 @@
           <code>audio</code> element.
       </audio>
   </figure>
-  <form action="addsong" method="post">
+  <form action="/playlist/add-track" method="POST">
     <label for="playlist">Add this song to a playlist:</label>
-    <select name="playlistoptions">
-    {{#each playlist}}
-      <option value="{{playlist.playlistname}}">{{playlist.playlistname}}</option>
+    <select name="playlistId">
+    {{#each this.savedPlaylists}}
+      <option value="{{this.id}}">{{this.playlistname}}</option>
     {{/each}}
     </select>
+    <input type="hidden" value="{{this.id}}" name="trackId" />
     <button type="submit">Add song</button>
   </form>
   {{/each}}

@@ -32,6 +32,10 @@ router.post("/results", isLoggedIn, async (req, res, next) => {
       const genre = getGenre.body.genres;
       let stringGenre = genre.join(" ");
       if (stringGenre.includes("metal")) {
+        console.log(
+          "🚀 ~ file: search.routes.js ~ line 37 ~ router.post ~ track.body.tracks.items",
+          track.body.tracks.items[0].id
+        );
         res.render("search/tracks.hbs", {
           track: track.body.tracks.items,
         });
