@@ -1,13 +1,13 @@
 <div id="form">
-    <h2>Signup</h2>
+    <h2 class="signuptext">Signup</h2>
     <form action="/signup" method="POST">
-        <label>Username
+        <label class="signuptext">Username
             <input type="text" name="username" placeholder="User Name" />
         </label>
-        <label>Password
+        <label class="signuptext">Password
             <input type="password" name="password" placeholder="********" />
         </label>
-        <button type="submit">Signup</button>
+        <button type="submit" class="singupbutton">Signup</button>
         {{#if errorMessage}}
             <p class="error">{{errorMessage}}</p>
         {{/if}}
@@ -15,7 +15,7 @@
 </div>
 <div>
   <form action="/" method="GET">
-    <p>Have an account?</p>
-    <button type="submit">Log in here</button>
+    <p class="signuptext">Have an account?</p>
+    <button type="submit" class="loginbutton">Log in here</button>
   </form>
 </div>
