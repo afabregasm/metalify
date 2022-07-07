@@ -1,17 +1,10 @@
-<h1 class="welcometext">Welcome {{user.username}}</h1>
-{{#each user.favorites}}
-<img src={{image}} alt={{name}}>
-<p>{{name}}</p>
-<form action = "/delete-favorite" method="POST">
-    <input type="hidden" name="id" value={{_id}}>
+<h1 class="welcometext">Welcome {{user.username}} 🤘🏻</h1>
+<div class="profilebutton">
+<a href="/playlist/new-playlist" class="loginbutton">Create a playlist</a>
+</div>
 
-<button type="submit">Borrar favorito</button>
-</form>
+{{#each this.playlists}}
+<a href="/playlist/edit-playlist/{{_id}}" class="customplaylistbutton">{{playlistname}} <br></a>
 {{/each}}
 
 
-<div class="profilebutton">
-<a href="/playlist/new-playlist" class="loginbutton">Create a playlist</a>
-<br>
-<a href="/playlist/my-playlist" class="loginbutton">My playlists</a>
-</div>
