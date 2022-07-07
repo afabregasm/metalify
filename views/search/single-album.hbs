@@ -1,7 +1,9 @@
+<div class="container">
 <h2 class="albumname">{{album.name}}</h2>
+<br>
 <p><img src="{{album.images.0.url}}" alt="{{album.name}}" width="250px" height="250px" class="albumimage" /></p>
 <p><a href="/artist/{{album.artists.0.id}}">{{album.artists.0.name}}</a></p>
-<p>{{album.release_date}}</p>
+<p class="releasetext">{{album.release_date}}</p>
 <div>
     {{#each album.tracks.items}}
         {{this.track_number}} - {{this.name}}
@@ -22,8 +24,9 @@
             {{/each}}
             </select>
             <input type="hidden" value="{{this.id}}" name="trackId" />
-            <button type="submit">Add song</button>
+            <button type="submit" class="buttonaddsong">Add song</button>
         </form>
     </div>
     {{/each}}
+</div>
 </div>

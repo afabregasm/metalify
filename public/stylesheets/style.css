@@ -114,7 +114,6 @@ footer {
   bottom: 0%;
   width: 100%;
   justify-content: center;
-  padding: 1em;
   position:absolute;
   flex-direction: row;
   
@@ -143,14 +142,17 @@ footer {
 
 .container {
   display: flex;
-  flex-direction: flex-start;
-  justify-content: space-around;
-  min-height: 100vh;
-  text-decoration-style: solid;
-
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  color: white;
+  padding: 5px;
+  
 }
 
-
+.releasetext {
+  color:white;
+}
 
 .albumtitleimage {
   align-content: center;
@@ -163,15 +165,16 @@ footer {
 
 
 .audioandtext{
-  justify-content: flex-start;
+  display: flex;
+  justify-content: center;
   align-items: center;
+  flex-direction: column;
   color: white;
+  padding: 10px;
   
 }
 
-.audioandform {
-  flex-direction: row;
-}
+
 
 .welcometext {
   text-align: center;
@@ -180,6 +183,11 @@ footer {
 
 .songnametext {
   color: white;
+}
+
+.artistname {
+  color: white;
+  font-size: 200%;
 }
 
 .profilebuttons {
@@ -358,12 +366,12 @@ margin:0.2em auto;
 
 .customplaylistbutton {
   display:flex;
-  flex-direction: row;
+  flex-direction: column;
   flex-wrap: wrap;
 padding:0.3em 1.2em;
 margin:0 0.3em 0.3em 0;
 border-radius:2em;
-box-sizing: border-box;
+box-sizing:content-box;
 text-decoration:none;
 font-family:'Roboto',sans-serif;
 font-weight:300;
@@ -391,6 +399,30 @@ transition: all 0.2s;
 }
 .updateplaylistbutton:hover{
 background-color:rgb(157, 90, 90);
+}
+
+.customplaylistbutton {
+  display:grid;
+padding:1em 1.2em;
+margin:1em 0.3em 0;
+border-radius:2em;
+box-sizing: border-box;
+text-decoration:none;
+font-family:'Roboto',sans-serif;
+font-weight:300;
+color:#FFFFFF;
+background-color:darkred;
+text-align:center;
+transition: all 0.2s;
+}
+.loginbutton:hover{
+background-color:rgb(157, 90, 90);
+}
+@media all and (max-width:30em){
+.loginbutton{
+display:block;
+margin:0.2em auto;
+}
 }
 
 .signuptext {
@@ -434,7 +466,10 @@ background-color:rgb(157, 90, 90);
 }
 
 #albumimage {
+  display: flex;
+  position: relative;
   justify-content: center;
+  align-items: center;
 
 }
 
@@ -449,4 +484,28 @@ background-color:rgb(157, 90, 90);
 
 .addtoplaylist {
   color: white;
+}
+
+.trackform {
+  display: flex;
+  position: relative;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.trackview {
+  display: flex;
+  flex-direction:column;
+  justify-content: center;
+  position: relative;
+  align-items: center;
+}
+
+.customplaylists {
+  display: flex;
+  flex-direction:column;
+  justify-content:center;
+  position: relative;
+  align-items: center;
+  padding-top: 10px;
 }
