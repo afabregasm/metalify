@@ -1,19 +1,19 @@
 <div id="form">
-   <h2>Login</h2>
+   <h2 class="logintext">Login</h2>
       <form action="/login" method="POST">
-        <label>Username
+        <label class="usernametext">Username
             <input type="text" name="username" placeholder="User Name" />
         </label>
-        <label>Password
+        <label class="passwordtext">Password
             <input type="password" name="password" placeholder="********" />
         </label>
-        <button type="submit">Login</button>
+        <button type="submit" class="loginbutton">Login</button>
         {{#if errorMessage}}
             <p class="error">{{errorMessage}}</p>
         {{/if}}
     </form>
        <form action="/signup" method="GET">
-      <h2>Not a member?</h2>
-      <button type="submit">Sign up here</button>
+      <h2 class="notamembertext">Not a member?</h2>
+      <button type="submit" class="singupbutton">Sign up here</button>
    </form>
 </div>

@@ -1,4 +1,4 @@
-<h1>Bienvenido {{user.username}}</h1>
+<h1 class="welcometext">Welcome {{user.username}}</h1>
 {{#each user.favorites}}
 <img src={{image}} alt={{name}}>
 <p>{{name}}</p>
@@ -9,7 +9,9 @@
 </form>
 {{/each}}
 
-<a href="/playlist/new-playlist"> Create a playlist </a>
-<br>
-<a href="/playlist/my-playlist"> My playlists</a>
 
+<div class="profilebutton">
+<a href="/playlist/new-playlist" class="loginbutton">Create a playlist</a>
+<br>
+<a href="/playlist/my-playlist" class="loginbutton">My playlists</a>
+</div>
