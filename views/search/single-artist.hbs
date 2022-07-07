@@ -1,10 +1,17 @@
-<h4>{{albums.0.artists.0.name}}</h4>
+<div class="container">
+
+<div class="albumtitleimage">
+<h4 class="albumname">{{albums.0.artists.0.name}}</h4>
+
 
 {{#each albums}}
-  <img src="{{this.images.0.url}}" />
-  <p><a href="/album/{{id}}">{{this.name}}</a></p>
+  <img id="albumimage" src="{{this.images.0.url}}" width="500"/>
+  <p class="albumtitletext"><a href="/album/{{id}}">{{this.name}}</a></p>
+  </div>
   {{#each this.cleanedSongs}}
+  <div class="audioandtext">
   <p>{{this.track_number}} - {{this.name}}</p>
+  
   <figure>
       <audio
       controls
@@ -13,14 +20,23 @@
           <code>audio</code> element.
       </audio>
   </figure>
+  
+
+  <div class="artistform">
   <form action="addsong" method="post">
     <label for="playlist">Add this song to a playlist:</label>
     <select name="playlistoptions">
+      
     {{#each playlist}}
       <option value="{{playlist.playlistname}}">{{playlist.playlistname}}</option>
     {{/each}}
     </select>
     <button type="submit">Add song</button>
   </form>
+  </div>
   {{/each}}
+  </div>
 {{/each}}
+ </div>
+
+ 

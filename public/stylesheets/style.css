@@ -1,6 +1,9 @@
 body {
   /* padding: 50px; */
   font: 14px 'Lucida Grande', Helvetica, Arial, sans-serif;
+  min-height: 100vh;
+  position: relative;
+  padding-bottom: 3em;
 }
  
 a {
@@ -108,11 +111,13 @@ ul li {
 }
 
 footer {
-  position: relative;
-  bottom: 0;
+  display: flex;
+  bottom: 0%;
   width: 100%;
-  height: auto;
-  text-align: center;
+  justify-content: center;
+  padding: 1em;
+  position: absolute;
+  flex-direction: row;
 }
 
 #squarediv {
@@ -130,8 +135,38 @@ footer {
   font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.container-fluid {
-  background-color: white
+#albumname {
+  text-align: auto;
+}
+
+.container {
+  display: flex;
+  flex-direction: flex-start;
+  justify-content: flex;
+  min-height: 100vh;
 
 }
+
+
+
+.albumtitleimage {
+  align-content: center;
+  padding: 10px;
+}
+
+.albumname {
+  font-size: 100%;
+}
+
+.albumtitletext {
+  font-size: 70%;
+}
+
+
+.audioandtext{
+  justify-content: flex-start;
+  align-items: center;
+  
+}
+
 
