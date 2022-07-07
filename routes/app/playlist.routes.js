@@ -21,8 +21,7 @@ router.post("/new-playlist", (req, res, next) => {
   Playlist.create({
     playlistname: newplaylist,
   })
-    .then((user) => {
-      console.log(user);
+    .then(() => {
       res.render("user/profile.hbs", {
         user: { playlistname: newplaylist },
       });
