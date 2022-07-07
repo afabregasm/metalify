@@ -12,5 +12,17 @@
             <code>audio</code> element.
         </audio>
     </figure>
+    <div class="artistform">
+        <form action="/playlist/add-track" method="POST">
+            <label for="playlist">Add this song to a playlist:</label>
+            <select name="playlistId">
+            {{#each this.savedPlaylists}}
+            <option value="{{this.id}}">{{this.playlistname}}</option>
+            {{/each}}
+            </select>
+            <input type="hidden" value="{{this.id}}" name="trackId" />
+            <button type="submit">Add song</button>
+        </form>
+    </div>
     {{/each}}
 </div>

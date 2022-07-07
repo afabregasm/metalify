@@ -23,7 +23,6 @@ router.get("/artist/:id", isLoggedIn, async (req, res, next) => {
   try {
     let finArray = [];
     const savedPlaylists = await Playlist.find();
-
     const albums = await spotifyApi.getArtistAlbums(id);
     const albumsArray = albums.body.items;
     for (const album of albumsArray) {
@@ -34,26 +33,29 @@ router.get("/artist/:id", isLoggedIn, async (req, res, next) => {
       });
       finArray.push({ ...album, cleanedSongs });
     }
-
     res.render("search/single-artist.hbs", {
       albums: finArray,
-      playlists: savedPlaylists,
     });
   } catch (error) {
     next(error);
   }
 });
 
-router.get("/album/:id", isLoggedIn, (req, res, next) => {
+router.get("/album/:id", isLoggedIn, async (req, res, next) => {
   const { id } = req.params;
-  spotifyApi
-    .getAlbum(id)
-    .then((album) => {
-      res.render("search/single-album.hbs", { album: album.body });
-    })
-    .catch((error) => {
-      next(error);
+  try {
+    const savedPlaylists = await Playlist.find();
+    const album = await spotifyApi.getAlbum(id);
+    const albumContent = album.body;
+    albumContent.tracks.items = albumContent.tracks.items.map((item) => {
+      return { ...item, savedPlaylists };
     });
+    res.render("search/single-album.hbs", {
+      album: albumContent,
+    });
+  } catch (error) {
+    next(error);
+  }
 });
 
 module.exports = router;
